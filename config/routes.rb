@@ -28,6 +28,7 @@ resources :users, except: [:index]
 #   end
 # end
 
+get '/login', to: 'sessions#new'
 post '/login', to: 'sessions#create'
 # get '/login' do
 #   p "here"
