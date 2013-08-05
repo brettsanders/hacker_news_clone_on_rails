@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   include BCrypt
+  attr_accessible :name, :email, :password
+
   has_many :posts, dependent: :destroy
   has_many :comments
 
