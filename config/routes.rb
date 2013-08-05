@@ -1,58 +1,163 @@
 RailsHackerNews::Application.routes.draw do
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
 
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
+#USER ROUTES
+root to: 'pages#index', as: 'homepage'
+# get '/' do
+#   @posts = Post.all
+#   erb :index
+# end
+resources :users, except: [:index]
+# post '/signup', to: 'user#create'
+# post '/signup' do
+#   @user = User.new(params)
+#   if @user.save
+#     session[:id] = @user.id
+#     redirect "user/#{@user.id}"
+#   else
+#     redirect '/'
+#   end
+# end
 
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
+# get '/user/:id' do
+#   if current_user.id == params[:id].to_i
+#     @posts = Post.where("user_id = ?", params[:id])
+#     @comments = Comment.where("user_id = ?", params[:id])
+#     erb :profile
+#   else
+#     redirect '/'
+#   end
+# end
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
+post '/login', to: 'sessions#create'
+# get '/login' do
+#   p "here"
+#   @user = User.find_by_email(params[:email])
+#   if @user.authenticate(params[:password])
+#    session[:id] = @user.id
+#     redirect "/user/#{@user.id}"
+#   else
+#     redirect '/'
+#   end 
+# end
 
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
+delete '/logout', to: 'sessions#destroy'
+# get '/logout' do
+#   session[:id] = nil
+#   redirect '/'
+# end
 
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
 
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
+#POST ROUTES
+resources :posts do
+  get 'vote_up', to: 'votes#post_vote_up'
+  get 'vote_down', to: 'votes#post_vote_down'
+  # POST VOTE ROUTES
+  # get '/vote/post/:post_id/up' do
+  #   Postvote.create(post_id: params[:post_id], vote: 1)
+  #   Postvote.where("post_id = ?", params[:post_id]).sum("vote").to_json
+  # end
 
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
+  # get '/vote/post/:post_id/down' do
+  #   Postvote.create(post_id: params[:post_id], vote: -1)
+  #   Postvote.where("post_id = ?", params[:post_id]).sum("vote").to_json
+  # end
+end
 
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+# get '/post/new' do
+#   erb :new_post
+# end
 
-  # See how all your routes lay out with "rake routes"
+# get '/post/:id' do
+#   @post = Post.find(params[:id])
+#   @comments = @post.comments
+#   erb :post
+# end
 
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id))(.:format)'
+# post '/post/new' do
+#   @post = Post.new(params)
+#   @post.user_id = current_user.id
+#   if @post.save
+#     redirect "/post/#{@post.id}"
+#   else
+#     redirect "post/new"
+#   end
+# end
+
+# get '/post/edit/:id' do
+#   @post = Post.find(params[:id])
+#   erb :edit_post
+# end
+
+# post '/post/edit/:id' do
+#   @post = Post.find(params[:id])
+#   @post.assign_attributes(title: params[:title],
+#                           link: params[:link])
+#   if @post.save
+#     redirect "/post/#{@post.id}"
+#   else
+#     erb :edit_post
+#   end
+# end
+
+# post '/post/destroy/:id' do
+#   @post = Post.find(params[:id])
+#   @post.destroy
+#   redirect "/user/#{current_user.id}"
+# end
+
+
+#COMMENT ROUTES
+resources :comments, except: [:index] do
+  get 'vote_up', to: 'votes#comment_vote_up'
+  get 'vote_down', to: 'votes#comment_vote_down'
+  # COMMENT VOTES ROUTES
+  # get '/vote/comment/:comment_id/:post_id/up' do
+  #   @post_id = params[:post_id]
+  #   Commentvote.create(comment_id: params[:comment_id], vote: 1)
+  #   Commentvote.where("comment_id = ?", params[:comment_id]).sum("vote").to_json
+  # end
+
+  # get '/vote/comment/:comment_id/:post_id/down' do
+  #   @post_id = params[:post_id]
+  #   Commentvote.create(comment_id: params[:comment_id], vote: -1)
+  #   Commentvote.where("comment_id = ?", params[:comment_id]).sum("vote").to_json
+  # end
+end
+
+# get '/comment/new' do
+#   erb :new_comment
+# end
+
+# post '/comment/:id/new' do
+#   @comment = Comment.new(body: params[:body], 
+#                          post_id: params[:id],
+#                          user_id: current_user.id)
+#   @comment.user_id = current_user.id
+#   if @comment.save
+#     redirect "/post/#{@comment.post_id}"
+#   else
+#     redirect "comment/new"
+#   end
+# end
+
+# get '/comment/edit/:id' do
+#   @comment = Comment.find(params[:id])
+#   erb :edit_comment
+# end
+
+# post '/comment/edit/:id' do
+#   @comment = Comment.find(params[:id])
+#   @comment.assign_attributes(body: params[:body])
+#   if @comment.save
+#     redirect "/post/#{@comment.post_id}"
+#   else
+#     erb :edit_comment
+#   end
+# end
+
+# post '/comment/destroy/:id' do
+#   @comment = Comment.find(params[:id])
+#   @comment.destroy
+#   redirect "/user/#{current_user.id}"
+# end
 end
