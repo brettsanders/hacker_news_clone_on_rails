@@ -1,5 +1,31 @@
-<h1>Here is your post</h1>
 <h2><%= @post.title %></h2>
 <p><%= @post.link %></p>
-<%= link_to 'Edit', edit_post_path %>
-<%= link_to 'Destroy', post_path, method: :delete %>
+
+<% if current_user.id == @post.user_id %>
+  <%= link_to 'Edit', edit_post_path %>
+  <%= link_to 'Destroy', post_path, method: :delete %>
+<% end %>
+
+<br>
+
+<h2>Comments</h2>
+<ol>
+  <% @post_comments.each do |comment| %>
+  <hr>
+    <li>
+      <%= comment.body %> <br><%= link_to 'delete' if current_user.id == comment.user_id %>
+    </li>
+    <br>
+  <% end %>
+</ol>
+
+<hr>
+<h3>Leave A Comment</h3>
+<%= form_for [@post,@comment] do |c| %>
+  <%= c.label :body %>
+  <%= c.text_field :body %>
+  <%= c.submit %>
+<% end %>
+
+
+
