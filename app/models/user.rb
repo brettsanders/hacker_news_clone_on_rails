@@ -6,8 +6,9 @@ class User < ActiveRecord::Base
   has_many :comments
 
   validates_uniqueness_of :email
-  validates_presence_of :email, :name, :password
-  validates :password, length: { minimum: 6 }
+  validates_presence_of :name, :email
+  validates :password, presence: true
+  # validates :password, length: { minimum: 6 }
 
   def password
     @password ||= Password.new(password_hash)
