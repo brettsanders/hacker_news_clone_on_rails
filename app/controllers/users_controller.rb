@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
+      session[:id] = @user.id
       redirect_to @user
     else
       render 'new'
@@ -31,6 +32,7 @@ class UsersController < ApplicationController
 
   def destroy
     User.find(params[:id]).destroy
+    session.clear
     redirect_to homepage_path
   end
 end

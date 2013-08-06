@@ -1,0 +1,25 @@
+<h1>Make your post</h1>
+<%= form_for @post do |p| %>
+  <% if @post.errors.any? %>
+    <div id="errorExplanation">
+      <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being created:</h2>
+      <ul>
+      <%= @post.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= p.label :title %><br>
+    <%= p.text_field :title %>
+  </p>
+  <p>
+    <%= p.label :link %><br>
+    <%= p.text_field :link %>
+  </p>
+  <p>
+    <%= p.submit %>
+  </p>
+<% end %>
